@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karate Scoreboard WKF</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="main-header">
+            <h1>🥋 KARATE SCOREBOARD WKF</h1>
+        </header>
+
+        <!-- Timer Section -->
+        <div class="timer-section">
+            <div class="timer-display" id="timer">03:00</div>
+            <div class="timer-controls">
+                <button id="startPause" class="btn timer-btn">▶️ START</button>
+                <button id="resetTimer" class="btn timer-btn">🔄 RESET</button>
+            </div>
+        </div>
+
+        <!-- Victory Banner -->
+        <div id="victoryBanner" class="victory-banner hidden"></div>
+
+        <!-- Competitors Section -->
+        <div class="competitors-grid">
+            <!-- AKA Competitor (Red) -->
+            <div class="competitor-section aka">
+                <div class="competitor-header">
+                    <h2 class="competitor-name">🔴 <span id="akaName">AKA</span></h2>
+                    <div id="akaSenshu" class="senshu-indicator hidden">⭐ SENSHU</div>
+                </div>
+                
+                <div class="score-display" id="akaScore">0</div>
+                
+                <div class="controls-grid">
+                    <div class="score-controls">
+                        <h3>Puntuación</h3>
+                        <div class="btn-row">
+                            <button class="btn score-btn" onclick="addScore('aka', 1)">Yuko<br>(1)</button>
+                            <button class="btn score-btn" onclick="addScore('aka', 2)">Waza-ari<br>(2)</button>
+                            <button class="btn score-btn" onclick="addScore('aka', 3)">Ippon<br>(3)</button>
+                        </div>
+                    </div>
+                    
+                    <div class="penalty-controls">
+                        <h3>Penalizaciones</h3>
+                        <div class="btn-row">
+                            <button class="btn penalty-btn" onclick="addPenalty('aka', 'chukoku')">Chukoku</button>
+                            <button class="btn penalty-btn" onclick="addPenalty('aka', 'keikoku')">Keikoku</button>
+                            <button class="btn penalty-btn" onclick="addPenalty('aka', 'hansoku_chui')">Hansoku-chui</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="akaPenalties" class="penalties-display"></div>
+                
+                <div class="reset-controls">
+                    <button class="btn reset-btn" onclick="resetCompetitor('aka')">🔄 Reset AKA</button>
+                    <button class="btn hansoku-btn" onclick="addPenalty('aka', 'hansoku')">⚡ Hansoku</button>
+                </div>
+            </div>
+
+            <!-- AO Competitor (Blue) -->
+            <div class="competitor-section ao">
+                <div class="competitor-header">
+                    <h2 class="competitor-name">🔵 <span id="aoName">AO</span></h2>
+                    <div id="aoSenshu" class="senshu-indicator hidden">⭐ SENSHU</div>
+                </div>
+                
+                <div class="score-display" id="aoScore">0</div>
+                
+                <div class="controls-grid">
+                    <div class="score-controls">
+                        <h3>Puntuación</h3>
+                        <div class="btn-row">
+                            <button class="btn score-btn" onclick="addScore('ao', 1)">Yuko<br>(1)</button>
+                            <button class="btn score-btn" onclick="addScore('ao', 2)">Waza-ari<br>(2)</button>
+                            <button class="btn score-btn" onclick="addScore('ao', 3)">Ippon<br>(3)</button>
+                        </div>
+                    </div>
+                    
+                    <div class="penalty-controls">
+                        <h3>Penalizaciones</h3>
+                        <div class="btn-row">
+                            <button class="btn penalty-btn" onclick="addPenalty('ao', 'chukoku')">Chukoku</button>
+                            <button class="btn penalty-btn" onclick="addPenalty('ao', 'keikoku')">Keikoku</button>
+                            <button class="btn penalty-btn" onclick="addPenalty('ao', 'hansoku_chui')">Hansoku-chui</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="aoPenalties" class="penalties-display"></div>
+                
+                <div class="reset-controls">
+                    <button class="btn reset-btn" onclick="resetCompetitor('ao')">🔄 Reset AO</button>
+                    <button class="btn hansoku-btn" onclick="addPenalty('ao', 'hansoku')">⚡ Hansoku</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Controls -->
+        <div class="global-controls">
+            <button class="btn global-btn" onclick="resetAll()">🔄 Reset Todo</button>
+            <button class="btn config-btn" onclick="toggleConfig()">⚙️ Configuración</button>
+        </div>
+
+        <!-- Configuration Panel -->
+        <div id="configPanel" class="config-panel hidden">
+            <h3>Configuración del Combate</h3>
+            <div class="config-grid">
+                <div>
+                    <label>Nombre AKA:</label>
+                    <input type="text" id="akaNameInput" value="AKA" onchange="updateNames()">
+                </div>
+                <div>
+                    <label>Nombre AO:</label>
+                    <input type="text" id="aoNameInput" value="AO" onchange="updateNames()">
+                </div>
+                <div>
+                    <label>Duración:</label>
+                    <select id="durationSelect" onchange="updateDuration()">
+                        <option value="60">1 minuto</option>
+                        <option value="120">2 minutos</option>
+                        <option value="180" selected>3 minutos</option>
+                        <option value="240">4 minutos</option>
+                        <option value="300">5 minutos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keyboard Controls Info -->
+        <div class="keyboard-info">
+            <details>
+                <summary>⌨️ Controles de Teclado</summary>
+                <div class="keyboard-grid">
+                    <div>
+                        <h4>AKA (Rojo):</h4>
+                        <p>Q: Yuko | W: Waza-ari | E: Ippon</p>
+                        <p>A: Chukoku | S: Keikoku | D: Hansoku-chui</p>
+                        <p>Z: Reset AKA</p>
+                    </div>
+                    <div>
+                        <h4>AO (Azul):</h4>
+                        <p>U: Yuko | I: Waza-ari | O: Ippon</p>
+                        <p>J: Chukoku | K: Keikoku | L: Hansoku-chui</p>
+                        <p>M: Reset AO</p>
+                    </div>
+                    <div>
+                        <h4>Tiempo:</h4>
+                        <p>Espacio: Start/Pause</p>
+                        <p>R: Reset Timer</p>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
